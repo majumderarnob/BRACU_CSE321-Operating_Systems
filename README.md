@@ -1,1 +1,1 @@
-# BRACU_CSE321-Operating_Systems
+These are my Lab Assignment files with solution of Brac University's Computer Science & Engineering departmental core course CSE321 known as Operating Systems. These Lab assignments are given during Spring'2022 Semester for the course work.
