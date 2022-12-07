@@ -1,53 +1,39 @@
-#include <stdio.h>
-struct process
-{
-    int waiting_time, arrival_time, brust_time, turn_arround_time;
-};
-
-struct process a[10];
+#include<stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int main()
 {
-    int n, temp[10];
-    int count = 0, t = 0, p;
-    float total_waiting_time = 0, total_turn_arround_time = 0, average_waiting_time, average_turn_arround_time;
-    printf("Enter the number of the process\n");
-    scanf("%d", &n);
-    printf("Enter the arrival time and burst time of the process\n");
-    printf("arrival_time   waiting_time\n");
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%d%d", &a[i].arrival_time, &a[i].brust_time);
-        temp[i] = a[i].brust_time;
+    int n;
+    printf("Enter  total process number: ");
+    scanf("%d",&n);
+    int arival[10], burst[10], temp[10], completion_time, i, smallest, total_wt = 0, total_tat=0,remain=0, time;
+    remain = n;
+    printf("Enter arrival and burst time for all process:\n");
+
+    for (i=0; i<n; i++){
+        scanf("%d %d",&arival[i],&burst[i]);
+        temp[i]=burst[i];
     }
-    a[9].brust_time = 10000;
-    for (t = 0; count != n; t++)
-    {
-        p = 9;
-        for (int i = 0; i < n; i++)
-        {
-            if (a[i].brust_time < a[p].brust_time && (a[i].arrival_time <= t && a[i].brust_time > 0))
-            {
-                p = i;
-            }
+    burst[9] = 9999;
+    for (time=0; remain != 0; time++){
+        smallest = 9;
+        for (i=0; i<n; i++){
+            if ( temp[i] > 0 && arival[i] <= time  && temp[i] <temp[smallest])
+                smallest = i;
         }
-        a[p].brust_time = a[p].brust_time - 1;
-        if (a[p].brust_time == 0)
-        {
-            count++;
-            a[p].waiting_time = t + 1 - a[p].arrival_time - temp[p];
-            a[p].turn_arround_time = t + 1 - a[p].arrival_time;
-            total_waiting_time = total_waiting_time + a[p].waiting_time;
-            total_turn_arround_time = total_turn_arround_time + a[p].turn_arround_time;
+        temp[smallest]-- ;
+        if (temp[smallest]==0){
+            remain--;
+            completion_time=time+1;
+            printf("process number:p%d   completion_time is:%d   Turn arround time is:%d    waiting time is: %d \n",smallest+1,completion_time,completion_time-arival[smallest],completion_time-arival[smallest]-burst[smallest]);
+            total_wt+=completion_time-arival[smallest]-burst[smallest];
+            total_tat+=completion_time-arival[smallest];
+
         }
     }
-    average_waiting_time = total_waiting_time / n;
-    average_turn_arround_time = total_turn_arround_time / n;
-    printf("waiting_time    turn_arround_time\n");
-    for (int i = 0; i < n; i++)
-    {
-        printf("\t%d\t%d\n", i + 1, a[i].waiting_time, a[i].turn_arround_time);
-    }
-    printf("Avg waiting time of the process is %f\n", average_waiting_time);
-    printf("Avg turn around time of the process %f\n", average_turn_arround_time);
+
 }
